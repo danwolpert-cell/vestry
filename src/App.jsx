@@ -545,6 +545,7 @@ export default function App() {
     <div style={{ minHeight:"100vh", background:C.bg, fontFamily:"'Inter', system-ui, sans-serif", color:C.text }}>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}*{box-sizing:border-box}a:hover{opacity:0.85}`}</style>
 
+      {editStock && <EditModal stock={editStock} onSave={updated=>setPortfolio(p=>p.map(x=>x.id===updated.id?updated:x))} onDelete={id=>setPortfolio(p=>p.filter(x=>x.id!==id))} onClose={()=>setEditStock(null)} />}
       {showAdd && <AddStockModal onAdd={s => setPortfolio(p=>[...p,s])} onClose={()=>setShowAdd(false)} />}
       {detail   && <StockDetailPanel stock={detail} onClose={()=>setDetail(null)} />}
 
