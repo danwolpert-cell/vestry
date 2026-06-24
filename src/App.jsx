@@ -1,4 +1,3 @@
-import { HEDGE_FUNDS } from "./hedge.js";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── API KEY STATE (mutable so runtime entry works) ────────────────────────────
