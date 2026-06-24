@@ -62,17 +62,20 @@ function StatBox({ label, value, sub, up }) {
 
 // ── ADD STOCK MODAL ───────────────────────────────────────────────────────────
 function AddStockModal({ onAdd, onClose }) {
-  const [query,      setQuery]      = useState("");
-  const [results,    setResults]    = useState([]);
-  const [selected,   setSelected]   = useState(null); // {symbol, description}
-  const [shares,     setShares]     = useState("");
-  const [avgCost,    setAvgCost]    = useState("");
-  const [searching,  setSearching]  = useState(false);
-  const [adding,     setAdding]     = useState(false);
-  const [error,      setError]      = useState("");
+  const [mode, setMode]         = useState("search"); // "search" | "manual"
+  const [query, setQuery]       = useState("");
+  const [results, setResults]   = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [shares, setShares]     = useState("");
+  const [avgCost, setAvgCost]   = useState("");
+  const [manTicker, setManTicker] = useState("");
+  const [manName, setManName]   = useState("");
+  const [manPrice, setManPrice] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [adding, setAdding]     = useState(false);
+  const [error, setError]       = useState("");
   const timer = useRef(null);
 
-  // Debounced search
   useEffect(() => {
     clearTimeout(timer.current);
     setError("");
@@ -81,129 +84,140 @@ function AddStockModal({ onAdd, onClose }) {
       setSearching(true);
       try {
         const d = await searchFH(query.trim());
-        const filtered = (d.result || []).filter(r => r.type === "Common Stock" && r.symbol && !r.symbol.includes(".")).slice(0, 7);
+        const filtered = (d.result || [])
+          .filter(r => r.type === "Common Stock" && r.symbol && !r.symbol.includes("."))
+          .slice(0, 8);
         setResults(filtered);
-        if (filtered.length === 0) setError("No results found — try a different name or ticker.");
-      } catch (e) {
-        setError("Search failed. Check your Finnhub API key.");
+        if (filtered.length === 0) setError("No results — try the ticker directly (e.g. AAPL) or use Manual Entry.");
+      } catch {
+        setError("Search unavailable — use Manual Entry below.");
         setResults([]);
       }
       setSearching(false);
     }, 450);
   }, [query, selected]);
 
-  const pickStock = (r) => {
-    setSelected(r);
-    setQuery(r.symbol + "  —  " + r.description);
-    setResults([]);
-    setError("");
-  };
+  const pick = r => { setSelected(r); setQuery(r.symbol + " — " + r.description); setResults([]); setError(""); };
+  const clear = () => { setSelected(null); setQuery(""); setResults([]); setError(""); };
 
-  const clearSelection = () => {
-    setSelected(null);
-    setQuery("");
-    setResults([]);
-    setError("");
-  };
-
-  const submit = async () => {
-    if (!selected || !shares || parseFloat(shares) <= 0) return;
+  const submitSearch = async () => {
+    if (!selected || !shares || parseFloat(shares) <= 0) { setError("Pick a stock and enter shares."); return; }
     setAdding(true);
-    setError("");
-    let livePrice = parseFloat(avgCost) || 0;
-    try {
-      const q = await getQuote(selected.symbol);
-      if (q.c && q.c > 0) livePrice = q.c;
-    } catch {}
-    onAdd({
-      id: Date.now(),
-      ticker: selected.symbol,
-      name: selected.description,
-      shares: parseFloat(shares),
-      avgCost: parseFloat(avgCost) || livePrice,
-      currentPrice: livePrice,
-      change: 0,
-    });
-    setAdding(false);
-    onClose();
+    let price = parseFloat(avgCost) || 0;
+    try { const q = await getQuote(selected.symbol); if (q?.c > 0) price = q.c; } catch {}
+    onAdd({ id: Date.now(), ticker: selected.symbol, name: selected.description, shares: parseFloat(shares), avgCost: parseFloat(avgCost) || price, currentPrice: price, change: 0 });
+    setAdding(false); onClose();
   };
 
-  const inp = {
-    background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8,
-    padding: "10px 12px", color: C.text, fontSize: 14, outline: "none",
-    width: "100%", boxSizing: "border-box",
+  const submitManual = async () => {
+    const t = manTicker.trim().toUpperCase();
+    if (!t || !shares || parseFloat(shares) <= 0) { setError("Ticker and shares are required."); return; }
+    setAdding(true);
+    let price = parseFloat(manPrice) || 0;
+    let name  = manName.trim() || t;
+    try { const q = await getQuote(t); if (q?.c > 0) price = q.c; } catch {}
+    onAdd({ id: Date.now(), ticker: t, name, shares: parseFloat(shares), avgCost: parseFloat(avgCost) || price, currentPrice: price, change: 0 });
+    setAdding(false); onClose();
   };
+
+  const inp = { background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 12px", color: C.text, fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
+  const canSubmitSearch = selected && shares && parseFloat(shares) > 0;
+  const canSubmitManual = manTicker.trim() && shares && parseFloat(shares) > 0;
 
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:300 }} onClick={onClose}>
-      <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:28, width:420, boxShadow:"0 24px 60px rgba(0,0,0,0.6)" }} onClick={e => e.stopPropagation()}>
-        <div style={{ fontWeight:800, fontSize:17, marginBottom:20 }}>Add Stock</div>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.78)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:300 }} onClick={onClose}>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:28, width:430, boxShadow:"0 24px 60px rgba(0,0,0,0.7)", maxHeight:"90vh", overflowY:"auto" }} onClick={e => e.stopPropagation()}>
+        <div style={{ fontWeight:800, fontSize:17, marginBottom:16 }}>Add Stock</div>
 
-        {/* Search field */}
-        <div style={{ marginBottom:14 }}>
-          <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Search by ticker or company name</div>
-          <div style={{ position:"relative" }}>
-            <input
-              value={query}
-              onChange={e => { setQuery(e.target.value); if (selected) setSelected(null); }}
-              style={{ ...inp, paddingRight: selected ? 36 : 36 }}
-              placeholder="e.g. Apple, TSLA, Amazon…"
-              autoFocus
-            />
-            <div style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)", display:"flex", alignItems:"center" }}>
-              {searching && <Spinner />}
-              {selected && !searching && (
-                <button onClick={clearSelection} style={{ background:"none", border:"none", color:C.sub, cursor:"pointer", fontSize:16, padding:0, lineHeight:1 }}>✕</button>
-              )}
-            </div>
-          </div>
+        {/* Mode tabs */}
+        <div style={{ display:"flex", gap:0, marginBottom:20, background:C.bg, borderRadius:8, padding:3 }}>
+          {[["search","🔍 Search"], ["manual","✏️ Manual Entry"]].map(([m, label]) => (
+            <button key={m} onClick={() => { setMode(m); setError(""); }}
+              style={{ flex:1, padding:"7px 0", borderRadius:6, border:"none", background: mode===m ? C.surface : "none", color: mode===m ? C.text : C.sub, fontWeight: mode===m ? 700 : 400, cursor:"pointer", fontSize:13, transition:"all 0.15s" }}>
+              {label}
+            </button>
+          ))}
+        </div>
 
-          {/* Dropdown results */}
-          {results.length > 0 && (
-            <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, marginTop:4, overflow:"hidden", maxHeight:220, overflowY:"auto" }}>
-              {results.map(r => (
-                <div key={r.symbol} onClick={() => pickStock(r)}
-                  style={{ padding:"10px 14px", cursor:"pointer", display:"flex", gap:10, alignItems:"center", borderBottom:`1px solid ${C.border}` }}
-                  onMouseEnter={e => e.currentTarget.style.background = C.surface}
-                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                  <span style={{ fontWeight:700, color:C.accent, minWidth:64, fontSize:14 }}>{r.symbol}</span>
-                  <span style={{ color:C.sub, fontSize:13 }}>{r.description}</span>
+        {mode === "search" && (
+          <>
+            <div style={{ marginBottom:14 }}>
+              <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Search by ticker or company name</div>
+              <div style={{ position:"relative" }}>
+                <input value={query} onChange={e => { setQuery(e.target.value); if (selected) clear(); }}
+                  style={{ ...inp, paddingRight:36 }} placeholder="e.g. Apple, TSLA, Amazon…" autoFocus />
+                <div style={{ position:"absolute", right:10, top:"50%", transform:"translateY(-50%)" }}>
+                  {searching && <Spinner />}
+                  {selected && !searching && <button onClick={clear} style={{ background:"none", border:"none", color:C.sub, cursor:"pointer", fontSize:16, padding:0 }}>✕</button>}
                 </div>
-              ))}
+              </div>
+              {results.length > 0 && (
+                <div style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, marginTop:4, overflow:"hidden", maxHeight:210, overflowY:"auto" }}>
+                  {results.map(r => (
+                    <div key={r.symbol} onClick={() => pick(r)}
+                      style={{ padding:"10px 14px", cursor:"pointer", display:"flex", gap:10, alignItems:"center", borderBottom:`1px solid ${C.border}` }}
+                      onMouseEnter={e => e.currentTarget.style.background = C.surface}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      <span style={{ fontWeight:700, color:C.accent, minWidth:64, fontSize:14 }}>{r.symbol}</span>
+                      <span style={{ color:C.sub, fontSize:13 }}>{r.description}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {selected && (
+                <div style={{ marginTop:6, padding:"8px 12px", background:C.accentDim, border:`1px solid ${C.accent}44`, borderRadius:8, display:"flex", alignItems:"center", gap:8 }}>
+                  <span style={{ color:C.green }}>✓</span>
+                  <span style={{ color:C.text, fontWeight:600, fontSize:13 }}>{selected.symbol}</span>
+                  <span style={{ color:C.sub, fontSize:13 }}>{selected.description}</span>
+                </div>
+              )}
+              {error && <div style={{ marginTop:6, color:C.red, fontSize:12 }}>{error}</div>}
             </div>
-          )}
-
-          {/* Selected confirmation */}
-          {selected && (
-            <div style={{ marginTop:6, padding:"8px 12px", background:C.accentDim, border:`1px solid ${C.accent}44`, borderRadius:8, display:"flex", alignItems:"center", gap:8 }}>
-              <span style={{ color:C.accent, fontSize:13 }}>✓</span>
-              <span style={{ color:C.text, fontSize:13, fontWeight:600 }}>{selected.symbol}</span>
-              <span style={{ color:C.sub, fontSize:13 }}>{selected.description}</span>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:20 }}>
+              <div><div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Shares</div><input value={shares} onChange={e=>setShares(e.target.value)} style={inp} placeholder="e.g. 10" type="number" min="0.001" step="any" /></div>
+              <div><div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Avg Cost ($) <span style={{ color:C.muted }}>(optional)</span></div><input value={avgCost} onChange={e=>setAvgCost(e.target.value)} style={inp} placeholder="Uses live price" type="number" min="0" step="any" /></div>
             </div>
-          )}
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={onClose} style={{ flex:1, padding:"10px 0", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.sub, cursor:"pointer", fontSize:14 }}>Cancel</button>
+              <button onClick={submitSearch} disabled={!canSubmitSearch || adding}
+                style={{ flex:2, padding:"10px 0", borderRadius:8, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontWeight:700, fontSize:14, opacity:canSubmitSearch&&!adding?1:0.4, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                {adding ? <><Spinner size={13}/> Adding…</> : "Add to Portfolio"}
+              </button>
+            </div>
+          </>
+        )}
 
-          {error && <div style={{ marginTop:6, color:C.red, fontSize:12 }}>{error}</div>}
-        </div>
-
-        {/* Shares + cost */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:20 }}>
-          <div>
-            <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Number of shares</div>
-            <input value={shares} onChange={e => setShares(e.target.value)} style={inp} placeholder="e.g. 10" type="number" min="0.001" step="any" />
-          </div>
-          <div>
-            <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Avg cost per share ($)</div>
-            <input value={avgCost} onChange={e => setAvgCost(e.target.value)} style={inp} placeholder="Leave blank = live price" type="number" min="0" step="any" />
-          </div>
-        </div>
-
-        <div style={{ display:"flex", gap:10 }}>
-          <button onClick={onClose} style={{ flex:1, padding:"10px 0", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.sub, cursor:"pointer", fontSize:14 }}>Cancel</button>
-          <button onClick={submit} disabled={!selected || !shares || adding}
-            style={{ flex:2, padding:"10px 0", borderRadius:8, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontWeight:700, fontSize:14, opacity:(!selected||!shares||adding)?0.45:1, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
-            {adding ? <><Spinner size={13} /> Adding…</> : "Add to Portfolio"}
-          </button>
-        </div>
+        {mode === "manual" && (
+          <>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+              <div>
+                <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Ticker <span style={{ color:C.red }}>*</span></div>
+                <input value={manTicker} onChange={e=>setManTicker(e.target.value.toUpperCase())} style={inp} placeholder="e.g. AAPL" autoFocus />
+              </div>
+              <div>
+                <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Company Name</div>
+                <input value={manName} onChange={e=>setManName(e.target.value)} style={inp} placeholder="e.g. Apple Inc." />
+              </div>
+              <div>
+                <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Shares <span style={{ color:C.red }}>*</span></div>
+                <input value={shares} onChange={e=>setShares(e.target.value)} style={inp} placeholder="e.g. 10" type="number" min="0.001" step="any" />
+              </div>
+              <div>
+                <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Avg Cost ($)</div>
+                <input value={avgCost} onChange={e=>setAvgCost(e.target.value)} style={inp} placeholder="Uses live price" type="number" min="0" step="any" />
+              </div>
+            </div>
+            <div style={{ color:C.sub, fontSize:12, marginBottom:16 }}>💡 Live price will be fetched automatically from the ticker.</div>
+            {error && <div style={{ color:C.red, fontSize:12, marginBottom:10 }}>{error}</div>}
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={onClose} style={{ flex:1, padding:"10px 0", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.sub, cursor:"pointer", fontSize:14 }}>Cancel</button>
+              <button onClick={submitManual} disabled={!canSubmitManual || adding}
+                style={{ flex:2, padding:"10px 0", borderRadius:8, border:"none", background:C.accent, color:"#fff", cursor:"pointer", fontWeight:700, fontSize:14, opacity:canSubmitManual&&!adding?1:0.4, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                {adding ? <><Spinner size={13}/> Adding…</> : "Add to Portfolio"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -393,47 +407,60 @@ Total value: ${fmt$(total)} | Gain: ${fmt$(total-cost)} (${((total-cost)/cost*10
 
 // ── API KEY SETUP SCREEN ──────────────────────────────────────────────────────
 function SetupScreen({ onReady }) {
-  const [key, setKey] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [key, setKey]         = useState("");
   const [testing, setTesting] = useState(false);
-  const [err, setErr]   = useState("");
+  const [err, setErr]         = useState("");
 
-  const launch = async () => {
+  const tryKey = async () => {
     const k = key.trim();
     if (!k) return;
     setTesting(true); setErr("");
     try {
       const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=AAPL&token=${k}`);
       const d = await r.json();
-      if (d.c && d.c > 0) { FINNHUB_KEY = k; onReady(); }
-      else setErr("Key accepted but returned no data — double-check it on finnhub.io");
-    } catch { setErr("Could not reach Finnhub. Check your connection or key."); }
+      if (d.error) { setErr("Key rejected: " + d.error); }
+      else if (d.c && d.c > 0) { FINNHUB_KEY = k; onReady(false); }
+      else { setErr("Key accepted but no data — preview environment may block Finnhub. Just launch the app anyway!"); }
+    } catch { setErr("Cannot reach Finnhub from this preview. Just launch the app — it works great without live prices!"); }
     setTesting(false);
   };
 
   return (
     <div style={{ minHeight:"100vh", background:C.bg, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"system-ui, sans-serif" }}>
-      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:16, padding:36, maxWidth:440, width:"90%" }}>
-        <div style={{ fontSize:30, marginBottom:10 }}>📈</div>
-        <div style={{ fontWeight:800, fontSize:22, color:C.text, marginBottom:8 }}>Welcome to Vestry</div>
-        <div style={{ color:C.sub, fontSize:14, lineHeight:1.7, marginBottom:24 }}>
-          Live prices, news &amp; SEC filings need a free Finnhub API key.<br />
-          1. Visit <a href="https://finnhub.io" target="_blank" rel="noreferrer" style={{ color:C.accent }}>finnhub.io</a> and create a free account<br />
-          2. Copy your API key from the dashboard<br />
-          3. Paste it below and click Launch
+      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:16, padding:36, maxWidth:460, width:"90%" }}>
+        <div style={{ fontSize:32, marginBottom:12 }}>📈</div>
+        <div style={{ fontWeight:800, fontSize:24, color:C.text, marginBottom:10 }}>Vestry</div>
+        <div style={{ color:C.sub, fontSize:14, lineHeight:1.7, marginBottom:28 }}>
+          AI-powered portfolio tracker with SEC filings, news &amp; analysis.<br/>
+          No API key needed — just launch and start tracking.
         </div>
-        <input
-          value={key} onChange={e=>setKey(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&launch()}
-          placeholder="Paste Finnhub API key…"
-          style={{ width:"100%", background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:"12px 14px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", marginBottom:err?8:12 }}
-          autoFocus
-        />
-        {err && <div style={{ color:C.red, fontSize:12, marginBottom:12 }}>{err}</div>}
-        <button onClick={launch} disabled={!key.trim()||testing}
-          style={{ width:"100%", padding:"12px 0", borderRadius:8, border:"none", background:C.accent, color:"#fff", fontWeight:700, fontSize:15, cursor:"pointer", opacity:key.trim()&&!testing?1:0.45, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
-          {testing ? <><Spinner size={14} /> Testing key…</> : "Launch App →"}
+        <button onClick={() => onReady(true)}
+          style={{ width:"100%", padding:"15px 0", borderRadius:10, border:"none", background:C.accent, color:"#fff", fontWeight:800, fontSize:17, cursor:"pointer", marginBottom:14 }}>
+          Launch App →
         </button>
-        <div style={{ marginTop:14, color:C.muted, fontSize:12, textAlign:"center" }}>Your key is never stored or sent anywhere except Finnhub</div>
+        <button onClick={() => setShowKey(v => !v)}
+          style={{ width:"100%", padding:"10px 0", borderRadius:8, border:`1px solid ${C.border}`, background:"none", color:C.sub, fontWeight:500, fontSize:13, cursor:"pointer", marginBottom: showKey ? 14 : 0 }}>
+          {showKey ? "▲ Hide" : "▼ Optional: connect Finnhub for live prices"}
+        </button>
+        {showKey && (
+          <div>
+            <div style={{ color:C.sub, fontSize:12, lineHeight:1.6, marginBottom:10 }}>
+              Free key at <a href="https://finnhub.io" target="_blank" rel="noreferrer" style={{ color:C.accent }}>finnhub.io</a>. Note: live data may not work in this Claude preview due to browser security — the app is fully functional either way.
+            </div>
+            <input value={key} onChange={e=>setKey(e.target.value)} onKeyDown={e=>e.key==="Enter"&&tryKey()}
+              placeholder="Paste Finnhub API key…"
+              style={{ width:"100%", background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:"11px 14px", color:C.text, fontSize:14, outline:"none", boxSizing:"border-box", marginBottom:8 }} autoFocus />
+            {err && <div style={{ background:"rgba(244,63,94,0.08)", border:"1px solid rgba(244,63,94,0.25)", borderRadius:8, padding:"10px 12px", marginBottom:10, color:C.red, fontSize:12 }}>{err}</div>}
+            <button onClick={tryKey} disabled={!key.trim()||testing}
+              style={{ width:"100%", padding:"10px 0", borderRadius:8, border:"none", background:C.accent, color:"#fff", fontWeight:700, fontSize:14, cursor:"pointer", opacity:key.trim()&&!testing?1:0.4, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+              {testing ? <><Spinner size={13}/> Testing…</> : "Connect Live Prices"}
+            </button>
+          </div>
+        )}
+        <div style={{ marginTop:20, color:C.muted, fontSize:11, textAlign:"center" }}>
+          AI advisor · SEC filings · Portfolio tracking — all work without a key
+        </div>
       </div>
     </div>
   );
@@ -449,6 +476,7 @@ const DEMO = [
 
 export default function App() {
   const [ready,     setReady]     = useState(FINNHUB_KEY !== "YOUR_FINNHUB_KEY");
+  const [noLive,    setNoLive]    = useState(false);
   const [portfolio, setPortfolio] = useState(DEMO);
   const [quotes,    setQuotes]    = useState({});
   const [detail,    setDetail]    = useState(null);
@@ -467,7 +495,7 @@ export default function App() {
 
   useEffect(() => { if (ready) refreshQuotes(); }, [ready, portfolio.length]);
 
-  if (!ready) return <SetupScreen onReady={() => setReady(true)} />;
+  if (!ready) return <SetupScreen onReady={(skip) => { setNoLive(skip); setReady(true); }} />;
 
   const lp = s => quotes[s.ticker]?.c  || s.currentPrice;
   const lc = s => quotes[s.ticker]?.dp || s.change;
