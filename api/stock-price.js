@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   const { ticker } = req.query;
   try {
     const r = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d&includePrePost=false`,
+      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d&includePrePost=false&modules=financialData,summaryDetail`,
       { headers: {
         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)',
         'Accept': '*/*',
