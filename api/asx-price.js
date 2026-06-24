@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { ticker } = req.query;
   try {
-    const r = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=demo`);
+    const r = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=7H3MWK03XM8LBUJA`);
     const d = await r.json();
     const q = d?.['Global Quote'];
     if (q?.['05. price']) {
