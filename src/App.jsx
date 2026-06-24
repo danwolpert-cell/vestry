@@ -582,7 +582,7 @@ export default function App() {
               <span style={{ color:C.sub, fontSize:12 }}>Click any row for details, news &amp; filings</span>
             </div>
             <div style={{ display:"grid", gridTemplateColumns:"1.8fr 1fr 1fr 0.7fr 1fr 1fr 1.2fr 70px", gap:"0 8px", padding:"8px 20px", color:C.sub, fontSize:11, textTransform:"uppercase", letterSpacing:"0.06em" }}>
-              {["Stock","Price","Avg Cost","Shares","Value","Today","Gain/Loss",""].map((h,i)=><span key={i} style={{ textAlign:i===0?"left":"right" }}>{h}</span>)}
+              {["Stock","Price","Avg Cost","Shares","Value","Today","Gain/Loss",""].map((h,i)=><span key={i} style={{ textAlign:"right" }}>{h}</span>)}
             </div>
             {portfolio.length === 0
               ? <div style={{ padding:"40px 20px", textAlign:"center", color:C.sub }}>No holdings yet — add your first stock above.</div>
