@@ -27,8 +27,7 @@ const getQuote   = async t => {
     if (t.endsWith('.AX')) {
       const r = await fetch(`/api/asx-price?ticker=${t}`);
       const d = await r.json();
-      const q = d?.chart?.result?.[0]?.meta;
-      return { c: q?.regularMarketPrice, pc: q?.previousClose || q?.chartPreviousClose };
+      return { c: d.c, pc: d.pc };
     }
     return fh(`/quote?symbol=${t}`);
   };
