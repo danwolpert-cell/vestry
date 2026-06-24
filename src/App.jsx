@@ -597,7 +597,7 @@ export default function App() {
                     style={{ display:"grid", gridTemplateColumns:"1.8fr 1fr 1fr 0.7fr 1fr 1fr 1.2fr 70px", gap:"0 8px", padding:"13px 20px", borderBottom:`1px solid ${C.border}`, cursor:"pointer", alignItems:"center", transition:"background 0.1s" }}
                     onMouseEnter={e=>e.currentTarget.style.background=C.card}
                     onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                    <div><div style={{ fontWeight:700, fontSize:14 }}>{s.ticker}</div><div style={{ color:C.sub, fontSize:11 }}>{s.name}</div></div>
+                    <div style={{ textAlign:"right" }}><div style={{ fontWeight:700, fontSize:14 }}>{s.ticker}</div><div style={{ color:C.sub, fontSize:11 }}>{s.name}</div></div>
                     <div style={{ textAlign:"right", fontWeight:600 }}>{fmt$(price)}</div>
                     <div style={{ textAlign:"right", color:C.sub }}>{fmt$(s.avgCost)}</div>
                     <div style={{ textAlign:"right", color:C.sub }}>{s.shares}</div>
