@@ -581,7 +581,7 @@ export default function App() {
               <span style={{ fontWeight:700, fontSize:15 }}>Holdings</span>
               <span style={{ color:C.sub, fontSize:12 }}>Click any row for details, news &amp; filings</span>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"1.3fr 1fr 0.8fr 0.6fr 1fr 1fr 1fr auto", gap:"0 8px", padding:"8px 20px", color:C.sub, fontSize:11, textTransform:"uppercase", letterSpacing:"0.06em" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"1.8fr 1fr 1fr 0.7fr 1fr 0.9fr 1.2fr auto", gap:"0 8px", padding:"8px 20px", color:C.sub, fontSize:11, textTransform:"uppercase", letterSpacing:"0.06em" }}>
               {["Stock","Price","Avg Cost","Shares","Value","Today","Gain/Loss",""].map((h,i)=><span key={i} style={{ textAlign:i>1&&i<6?"right":"left" }}>{h}</span>)}
             </div>
             {portfolio.length === 0
@@ -594,7 +594,7 @@ export default function App() {
                 const todayN = s.shares * price * chg / 100;
                 return (
                   <div key={s.id} onClick={()=>setDetail(s)}
-                    style={{ display:"grid", gridTemplateColumns:"1.3fr 1fr 0.8fr 0.6fr 1fr 1fr 1fr auto", gap:"0 8px", padding:"13px 20px", borderBottom:`1px solid ${C.border}`, cursor:"pointer", alignItems:"center", transition:"background 0.1s" }}
+                    style={{ display:"grid", gridTemplateColumns:"1.8fr 1fr 1fr 0.7fr 1fr 0.9fr 1.2fr auto", gap:"0 8px", padding:"13px 20px", borderBottom:`1px solid ${C.border}`, cursor:"pointer", alignItems:"center", transition:"background 0.1s" }}
                     onMouseEnter={e=>e.currentTarget.style.background=C.card}
                     onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                     <div><div style={{ fontWeight:700, fontSize:14 }}>{s.ticker}</div><div style={{ color:C.sub, fontSize:11 }}>{s.name}</div></div>
