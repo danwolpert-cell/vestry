@@ -23,7 +23,15 @@ async function fh(path) {
   if (!r.ok) throw new Error(r.status);
   return r.json();
 }
-const getQuote   = t  => fh(`/quote?symbol=${t}`);
+const getQuote   = async t => {
+    if (t.endsWith('.AX')) {
+      const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${t}?interval=1d&range=1d`);
+      const d = await r.json();
+      const q = d?.chart?.result?.[0]?.meta;
+      return { c: q?.regularMarketPrice, pc: q?.previousClose || q?.chartPreviousClose };
+    }
+    return fh(`/quote?symbol=${t}`);
+  };
 const getProfile = t  => fh(`/stock/profile2?symbol=${t}`);
 const getNews    = t  => { const to = new Date().toISOString().slice(0,10); const from = new Date(Date.now()-7*864e5).toISOString().slice(0,10); return fh(`/company-news?symbol=${t}&from=${from}&to=${to}`); };
 const searchFH   = q  => fh(`/search?q=${encodeURIComponent(q)}`);
