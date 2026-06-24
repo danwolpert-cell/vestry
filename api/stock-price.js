@@ -1,29 +1,31 @@
 export default async function handler(req, res) {
   const { ticker } = req.query;
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)',
+    'Accept': '*/*',
+    'Referer': 'https://finance.yahoo.com'
+  };
   try {
-    const r = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d&includePrePost=false`,
-      { headers: {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)',
-        'Accept': '*/*',
-        'Referer': 'https://finance.yahoo.com'
-      }}
-    );
-    const d = await r.json();
-    const m = d?.chart?.result?.[0]?.meta;
-    const quotes = d?.chart?.result?.[0]?.indicators?.quote?.[0];
+    const [r1, r2] = await Promise.all([
+      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d&includePrePost=false`, { headers }),
+      fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${ticker}`, { headers })
+    ]);
+    const d1 = await r1.json();
+    const d2 = await r2.json();
+    const m = d1?.chart?.result?.[0]?.meta;
+    const q = d2?.quoteResponse?.result?.[0];
+    const quotes = d1?.chart?.result?.[0]?.indicators?.quote?.[0];
     const opens = quotes?.open || [];
     const todayOpen = opens[opens.length - 1];
-
     if (m?.regularMarketPrice) {
       res.json({
         c: m.regularMarketPrice,
         pc: m.chartPreviousClose,
-        open: todayOpen,
+        open: q?.regularMarketOpen || todayOpen,
         high: m.regularMarketDayHigh,
         low: m.regularMarketDayLow,
         volume: m.regularMarketVolume,
-        marketCap: null,
+        marketCap: q?.marketCap,
         change: m.regularMarketPrice - m.chartPreviousClose,
         changePct: (m.regularMarketPrice - m.chartPreviousClose) / m.chartPreviousClose,
         week52High: m.fiftyTwoWeekHigh,

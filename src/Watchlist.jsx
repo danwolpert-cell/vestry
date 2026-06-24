@@ -59,7 +59,7 @@ export default function Watchlist() {
                   <button onClick={()=>removeStock(stock.ticker)} style={{background:"none",border:"none",color:C.sub,cursor:"pointer",fontSize:16,padding:"2px 8px"}}>✕</button>
                 </div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:8}}>
-                  {[["Prev Close",fmtPrice(p?.pc)],["52W High",fmtPrice(p?.week52High)],["52W Low",fmtPrice(p?.week52Low)],["Volume",fmtVol(p?.volume)],["Open",fmtPrice(p?.open)],["Day High",fmtPrice(p?.high)],["Day Low",fmtPrice(p?.low)],["Day Range",p?.dayRange||"--"]].map(([l,v])=>(
+                  {[["Market Cap",fmtBig(p?.marketCap)],["52W High",fmtPrice(p?.week52High)],["52W Low",fmtPrice(p?.week52Low)],["Volume",fmtVol(p?.volume)],["Open",fmtPrice(p?.open)],["Day High",fmtPrice(p?.high)],["Day Low",fmtPrice(p?.low)],["Day Range",p?.dayRange||"--"]].map(([l,v])=>(
                     <div key={l} style={{background:C.card,borderRadius:8,padding:"8px 10px"}}>
                       <div style={{color:C.sub,fontSize:10,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:3}}>{l}</div>
                       <div style={{color:C.text,fontSize:12,fontWeight:600}}>{v}</div>
