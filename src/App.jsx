@@ -86,7 +86,7 @@ function AddStockModal({ onAdd, onClose }) {
       try {
         const d = await searchFH(query.trim());
         const filtered = (d.result || [])
-          .filter(r => market === "ASX" ? r.symbol && r.symbol.endsWith(".AX") : r.type === "Common Stock" && r.symbol && !r.symbol.includes("."))
+          .filter(r => market === "ASX" ? r.symbol && r.symbol.endsWith(".AX") : r.symbol && !r.symbol.includes(".") && (r.type === "Common Stock" || r.type === "ETP"))
           .slice(0, 8);
         setResults(filtered);
         if (filtered.length === 0) setError("No results — try the ticker directly (e.g. AAPL) or use Manual Entry.");
