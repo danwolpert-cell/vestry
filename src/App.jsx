@@ -475,6 +475,39 @@ const DEMO = [
   { id:4, ticker:"GOOGL",name:"Alphabet Inc.",   shares:3,  avgCost:120.00, currentPrice:175.80, change:0 },
 ];
 
+
+function EditModal({ stock, onSave, onDelete, onClose }) {
+  const [name, setName] = useState(stock.name);
+  const [shares, setShares] = useState(String(stock.shares));
+  const [avgCost, setAvgCost] = useState(String(stock.avgCost));
+  const inp = { background:"#080a0f", border:"1px solid #1e2335", borderRadius:8, padding:"10px 12px", color:"#e2e8f5", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box" };
+  const save = () => {
+    if (!shares || parseFloat(shares) <= 0) return;
+    onSave({ ...stock, name: name.trim() || stock.ticker, shares: parseFloat(shares), avgCost: parseFloat(avgCost) || stock.avgCost });
+    onClose();
+  };
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.78)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:400 }} onClick={onClose}>
+      <div style={{ background:"#141720", border:"1px solid #1e2335", borderRadius:16, padding:28, width:380, boxShadow:"0 24px 60px rgba(0,0,0,0.7)" }} onClick={e=>e.stopPropagation()}>
+        <div style={{ fontWeight:800, fontSize:17, color:"#e2e8f5", marginBottom:4 }}>Edit {stock.ticker}</div>
+        <div style={{ color:"#7c87a0", fontSize:12, marginBottom:20 }}>Update your holding details</div>
+        <div style={{ display:"flex", flexDirection:"column", gap:12, marginBottom:20 }}>
+          <div><div style={{ color:"#7c87a0", fontSize:12, marginBottom:6 }}>Company Name</div><input value={name} onChange={e=>setName(e.target.value)} style={inp} /></div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+            <div><div style={{ color:"#7c87a0", fontSize:12, marginBottom:6 }}>Shares</div><input value={shares} onChange={e=>setShares(e.target.value)} style={inp} type="number" min="0.001" step="any" /></div>
+            <div><div style={{ color:"#7c87a0", fontSize:12, marginBottom:6 }}>Avg Cost ($)</div><input value={avgCost} onChange={e=>setAvgCost(e.target.value)} style={inp} type="number" min="0" step="any" /></div>
+          </div>
+        </div>
+        <div style={{ display:"flex", gap:10 }}>
+          <button onClick={()=>{onDelete(stock.id);onClose();}} style={{ padding:"10px 14px", borderRadius:8, border:"1px solid rgba(244,63,94,0.3)", background:"none", color:"#f43f5e", cursor:"pointer", fontSize:13, fontWeight:600 }}>Delete</button>
+          <button onClick={onClose} style={{ flex:1, padding:"10px 0", borderRadius:8, border:"1px solid #1e2335", background:"none", color:"#7c87a0", cursor:"pointer", fontSize:14 }}>Cancel</button>
+          <button onClick={save} style={{ flex:2, padding:"10px 0", borderRadius:8, border:"none", background:"#4f8eff", color:"#fff", cursor:"pointer", fontWeight:700, fontSize:14 }}>Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [ready,     setReady]     = useState(FINNHUB_KEY !== "YOUR_FINNHUB_KEY");
   const [noLive,    setNoLive]    = useState(false);
