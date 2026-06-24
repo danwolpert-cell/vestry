@@ -25,7 +25,7 @@ async function fh(path) {
 }
 const getQuote   = async t => {
     if (t.endsWith('.AX')) {
-      const r = await fetch(`https://corsproxy.io/?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+t+'?interval=1d&range=1d')}`);
+      const r = await fetch(`/api/asx-price?ticker=${t}`);
       const d = await r.json();
       const q = d?.chart?.result?.[0]?.meta;
       return { c: q?.regularMarketPrice, pc: q?.previousClose || q?.chartPreviousClose };
