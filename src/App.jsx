@@ -512,8 +512,9 @@ function EditModal({ stock, onSave, onDelete, onClose }) {
 export default function App() {
   const [ready,     setReady]     = useState(FINNHUB_KEY !== "YOUR_FINNHUB_KEY");
   const [noLive,    setNoLive]    = useState(false);
-  const [portfolio, setPortfolio] = useState(DEMO);
+  const [portfolio, setPortfolio] = useState(() => { try { const s = localStorage.getItem("vestry_portfolio"); return s ? JSON.parse(s) : DEMO; } catch { return DEMO; } });
   const [quotes,    setQuotes]    = useState({});
+  useEffect(() => { localStorage.setItem("vestry_portfolio", JSON.stringify(portfolio)); }, [portfolio]);
   const [detail,    setDetail]    = useState(null);
   const [showAdd,   setShowAdd]   = useState(false);
   const [editStock, setEditStock] = useState(null);
