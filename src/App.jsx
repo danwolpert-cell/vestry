@@ -509,6 +509,186 @@ function EditModal({ stock, onSave, onDelete, onClose }) {
   );
 }
 
+
+
+const FUNDS100 = [
+  {rank:1,name:"Bridgewater Associates",manager:"Ray Dalio",country:"USA",aum:124,strategy:"Global Macro",ret:8.2,founded:1975,desc:"World's largest hedge fund. Famous for its All Weather and Pure Alpha strategies, built on Ray Dalio's economic machine principles."},
+  {rank:2,name:"Man Group",manager:"Robyn Grew",country:"UK",aum:72,strategy:"Multi-Strategy",ret:11.4,founded:1783,desc:"Oldest and one of the largest publicly traded hedge fund companies, combining quantitative and discretionary investing across asset classes."},
+  {rank:3,name:"Renaissance Technologies",manager:"Peter Brown",country:"USA",aum:57,strategy:"Quantitative",ret:31.5,founded:1982,desc:"Legendary quant fund. Its Medallion Fund is considered the most successful hedge fund in history, averaging 66% gross annual returns."},
+  {rank:4,name:"Millennium Management",manager:"Israel Englander",country:"USA",aum:55,strategy:"Multi-Strategy",ret:13.1,founded:1989,desc:"Runs hundreds of independent trading teams across equities, fixed income, commodities and currencies simultaneously."},
+  {rank:5,name:"Citadel",manager:"Ken Griffin",country:"USA",aum:53,strategy:"Multi-Strategy",ret:15.3,founded:1990,desc:"One of the most successful multi-strategy funds ever, generating over $73 billion in net gains for investors since inception."},
+  {rank:6,name:"D.E. Shaw & Co.",manager:"David Shaw",country:"USA",aum:50,strategy:"Quantitative",ret:12.8,founded:1988,desc:"Pioneer in computational finance and algorithmic trading, blending mathematics, computer science and finance at scale."},
+  {rank:7,name:"Two Sigma Investments",manager:"John Overdeck",country:"USA",aum:46,strategy:"Quantitative",ret:10.9,founded:2001,desc:"Uses machine learning and distributed computing to find signals in massive datasets for fully systematic trading strategies."},
+  {rank:8,name:"Farallon Capital",manager:"Thomas Steyer",country:"USA",aum:39,strategy:"Multi-Strategy",ret:9.7,founded:1986,desc:"Multi-strategy fund investing in equities, credit, real estate and direct investments globally with a fundamental approach."},
+  {rank:9,name:"Davidson Kempner Capital",manager:"Thomas Kempner Jr.",country:"USA",aum:37,strategy:"Event Driven",ret:11.2,founded:1983,desc:"Focuses on distressed debt, merger arbitrage and special situations across global markets with a long track record."},
+  {rank:10,name:"Elliott Management",manager:"Paul Singer",country:"USA",aum:34,strategy:"Event Driven",ret:12.3,founded:1977,desc:"One of the most prominent activist hedge funds, known for aggressive corporate and sovereign debt campaigns globally."},
+  {rank:11,name:"Baupost Group",manager:"Seth Klarman",country:"USA",aum:32,strategy:"Value",ret:10.1,founded:1982,desc:"Disciplined value investor focused on margin of safety. Known for holding large cash reserves when opportunities are scarce."},
+  {rank:12,name:"Marshall Wace",manager:"Paul Marshall",country:"UK",aum:31,strategy:"Long/Short Equity",ret:13.5,founded:1997,desc:"European quant and discretionary L/S equity fund, known for its TOPS platform that aggregates broker trade ideas."},
+  {rank:13,name:"Soros Fund Management",manager:"George Soros",country:"USA",aum:30,strategy:"Global Macro",ret:11.6,founded:1969,desc:"Family office of legendary macro investor George Soros, who famously broke the Bank of England in 1992 making $1B in a day."},
+  {rank:14,name:"Tiger Global Management",manager:"Chase Coleman",country:"USA",aum:35,strategy:"Long/Short Equity",ret:14.6,founded:2001,desc:"Growth-oriented fund focused on technology companies in both public and private markets globally."},
+  {rank:15,name:"Pershing Square Capital",manager:"Bill Ackman",country:"USA",aum:20,strategy:"Activist",ret:16.2,founded:2004,desc:"Concentrated activist fund known for high-profile campaigns at Chipotle, Hilton, Universal Music and Fannie Mae."},
+  {rank:16,name:"Third Point",manager:"Dan Loeb",country:"USA",aum:14,strategy:"Activist",ret:13.9,founded:1995,desc:"Event-driven activist fund known for sharply worded letters to management and transformative corporate campaigns."},
+  {rank:17,name:"Appaloosa Management",manager:"David Tepper",country:"USA",aum:13,strategy:"Event Driven",ret:14.8,founded:1993,desc:"Distressed debt and equities specialist. David Tepper is one of the highest-earning hedge fund managers in history."},
+  {rank:18,name:"Coatue Management",manager:"Philippe Laffont",country:"USA",aum:28,strategy:"Long/Short Equity",ret:14.1,founded:1999,desc:"Technology-focused L/S equity fund with major positions in public and private tech companies worldwide."},
+  {rank:19,name:"Viking Global Investors",manager:"Andreas Halvorsen",country:"USA",aum:26,strategy:"Long/Short Equity",ret:13.3,founded:1999,desc:"Fundamental L/S equity fund with a long-term investment horizon, run by former Tiger Management alumni."},
+  {rank:20,name:"AQR Capital Management",manager:"Cliff Asness",country:"USA",aum:19,strategy:"Quantitative",ret:9.4,founded:1998,desc:"Combines academic research with systematic trading across value, momentum and alternative risk premia factors."},
+  {rank:21,name:"Lone Pine Capital",manager:"Steve Mandel",country:"USA",aum:18,strategy:"Long/Short Equity",ret:13.7,founded:1997,desc:"Fundamental long/short equity fund with concentrated global portfolio, a classic Tiger Cub fund."},
+  {rank:22,name:"Greenlight Capital",manager:"David Einhorn",country:"USA",aum:2,strategy:"Long/Short Equity",ret:10.4,founded:1996,desc:"Value-oriented L/S fund famous for shorting Lehman Brothers before its 2008 collapse."},
+  {rank:23,name:"Point72 Asset Management",manager:"Steve Cohen",country:"USA",aum:27,strategy:"Multi-Strategy",ret:12.6,founded:2014,desc:"Converted from SAC Capital. Runs discretionary and quant strategies across global equity and macro markets."},
+  {rank:24,name:"Paulson & Co.",manager:"John Paulson",country:"USA",aum:3,strategy:"Event Driven",ret:8.9,founded:1994,desc:"Made $15B shorting subprime mortgages in 2007 — one of the greatest trades in hedge fund history."},
+  {rank:25,name:"Brevan Howard",manager:"Alan Howard",country:"UK",aum:35,strategy:"Global Macro",ret:12.1,founded:2002,desc:"Leading global macro fund focused on fixed income and currency markets with a rigorous risk management culture."},
+  {rank:26,name:"Winton Group",manager:"David Harding",country:"UK",aum:7,strategy:"Quantitative",ret:8.6,founded:1997,desc:"Systematic CTA using statistical methods and scientific research to trade diversified futures markets globally."},
+  {rank:27,name:"BlueCrest Capital",manager:"Michael Platt",country:"UK",aum:15,strategy:"Multi-Strategy",ret:13.8,founded:2000,desc:"Returned outside capital in 2015. Now a private firm running a mix of macro and systematic strategies for principals only."},
+  {rank:28,name:"Lansdowne Partners",manager:"Peter Davies",country:"UK",aum:10,strategy:"Long/Short Equity",ret:9.8,founded:1998,desc:"Fundamental European L/S equity fund known for deep research, concentrated positions and long holding periods."},
+  {rank:29,name:"Capula Investment Management",manager:"Yan Huo",country:"UK",aum:20,strategy:"Fixed Income",ret:10.2,founded:2005,desc:"One of Europe's largest fixed income and macro hedge funds, specializing in relative value and tail risk strategies."},
+  {rank:30,name:"Greenoaks Capital",manager:"Neil Mehta",country:"USA",aum:9,strategy:"Long/Short Equity",ret:22.1,founded:2012,desc:"Concentrated long-term fund focused on technology-enabled businesses with durable competitive advantages."},
+  {rank:31,name:"Dragoneer Investment Group",manager:"Marc Stad",country:"USA",aum:15,strategy:"Long/Short Equity",ret:18.4,founded:2012,desc:"Growth equity fund investing in technology and consumer businesses at inflection points in both public and private markets."},
+  {rank:32,name:"Durable Capital Partners",manager:"Henry Ellenbogen",country:"USA",aum:12,strategy:"Long/Short Equity",ret:17.2,founded:2019,desc:"Long-term growth investor in technology-enabled businesses, focused on compounding over a 5-10 year horizon."},
+  {rank:33,name:"Whale Rock Capital",manager:"Alex Sacerdote",country:"USA",aum:10,strategy:"Long/Short Equity",ret:16.9,founded:2006,desc:"Tech-focused long/short equity fund with concentrated positions in high-growth software and internet companies."},
+  {rank:34,name:"Altimeter Capital",manager:"Brad Gerstner",country:"USA",aum:8,strategy:"Long/Short Equity",ret:19.3,founded:2008,desc:"Technology investor in both public and private markets, known for deep sector expertise and long holding periods."},
+  {rank:35,name:"Alkeon Capital",manager:"Panayotis Sparaggis",country:"USA",aum:16,strategy:"Long/Short Equity",ret:20.1,founded:2001,desc:"Technology-focused growth equity fund with large concentrated positions in leading technology companies globally."},
+  {rank:36,name:"TCI Fund Management",manager:"Chris Hohn",country:"UK",aum:55,strategy:"Activist",ret:19.1,founded:2003,desc:"Activist hedge fund known for environmental campaigns and long-term concentrated equity positions in quality businesses."},
+  {rank:37,name:"Hillhouse Capital",manager:"Zhang Lei",country:"China",aum:30,strategy:"Long/Short Equity",ret:19.7,founded:2005,desc:"Preeminent Asia-focused long-term investor with major stakes in Chinese internet and consumer companies like Tencent."},
+  {rank:38,name:"Hengde Asset Management",manager:"Zhang Lei",country:"China",aum:5,strategy:"Long/Short Equity",ret:21.3,founded:2005,desc:"China's leading growth equity fund, known for early investments in Tencent, JD.com and other Chinese tech giants."},
+  {rank:39,name:"GIC Private Limited",manager:"Lim Chow Kiat",country:"Singapore",aum:690,strategy:"Sovereign Wealth",ret:6.9,founded:1981,desc:"Singapore's sovereign wealth fund managing the country's foreign reserves across global asset classes and geographies."},
+  {rank:40,name:"Platinum Asset Management",manager:"Kerr Neilson",country:"Australia",aum:8,strategy:"Global Equity",ret:10.8,founded:1994,desc:"Contrarian global equity fund focused on identifying undervalued securities and structural shifts in global industries."},
+  {rank:41,name:"Regal Funds Management",manager:"Philip King",country:"Australia",aum:4,strategy:"Long/Short Equity",ret:16.8,founded:2004,desc:"Australian L/S equity manager with a strong track record across domestic and Asian markets."},
+  {rank:42,name:"Caledonia Investments",manager:"Will Vicars",country:"Australia",aum:3,strategy:"Long/Short Equity",ret:14.2,founded:1992,desc:"Private Australian fund with long-term, concentrated positions in quality businesses across global markets."},
+  {rank:43,name:"Bennelong Funds Management",manager:"John Burke",country:"Australia",aum:2,strategy:"Long/Short Equity",ret:13.7,founded:2003,desc:"Australian boutique manager with multiple equity strategies focused on domestic and Asian markets."},
+  {rank:44,name:"Orbis Investments",manager:"William Gray",country:"South Africa",aum:30,strategy:"Global Equity",ret:11.3,founded:1989,desc:"Contrarian global equity manager owned by the Allan Gray group, known for long-term value creation."},
+  {rank:45,name:"Qube Research & Technologies",manager:"Pierre-Yves Morlat",country:"UK",aum:14,strategy:"Quantitative",ret:15.6,founded:2014,desc:"European quant hedge fund spun out of Credit Suisse, using machine learning across global markets."},
+  {rank:46,name:"ExodusPoint Capital",manager:"Michael Gelband",country:"USA",aum:13,strategy:"Multi-Strategy",ret:10.8,founded:2018,desc:"One of the largest hedge fund launches in history at $8.5B, running diversified multi-strategy across asset classes."},
+  {rank:47,name:"Graham Capital Management",manager:"Ken Tropin",country:"USA",aum:18,strategy:"Global Macro",ret:11.7,founded:1994,desc:"Discretionary and systematic global macro fund with expertise across commodities, rates and currencies."},
+  {rank:48,name:"Caxton Associates",manager:"Andrew Law",country:"USA",aum:11,strategy:"Global Macro",ret:10.9,founded:1983,desc:"Global macro fund founded by Bruce Kovner, one of the most successful macro traders in history."},
+  {rank:49,name:"Moore Capital Management",manager:"Louis Bacon",country:"USA",aum:8,strategy:"Global Macro",ret:9.6,founded:1989,desc:"Discretionary global macro fund run by legendary trader Louis Bacon, investing across all liquid asset classes."},
+  {rank:50,name:"Aspect Capital",manager:"Anthony Todd",country:"UK",aum:9,strategy:"CTA/Trend",ret:9.2,founded:1998,desc:"Systematic trend-following CTA founded by former Man AHL executives, trading diversified global futures markets."},
+  {rank:51,name:"Systematica Investments",manager:"Leda Braga",country:"UK",aum:10,strategy:"CTA/Trend",ret:10.1,founded:2015,desc:"Systematic investment manager using statistical methods across trend following and alternative risk premia."},
+  {rank:52,name:"Arrowstreet Capital",manager:"Peter Rathjens",country:"USA",aum:17,strategy:"Quantitative",ret:10.4,founded:1999,desc:"Quantitative global equity manager applying systematic factor models across developed and emerging markets."},
+  {rank:53,name:"PDT Partners",manager:"Peter Muller",country:"USA",aum:7,strategy:"Quantitative",ret:14.2,founded:1993,desc:"Quant fund spun out of Morgan Stanley, using proprietary statistical models across equity, fixed income and derivatives."},
+  {rank:54,name:"Jane Street Capital",manager:"Various Partners",country:"USA",aum:20,strategy:"Quantitative",ret:13.8,founded:2000,desc:"Leading market maker and proprietary trading firm using quantitative strategies across ETFs, equities and options."},
+  {rank:55,name:"Hudson Bay Capital",manager:"Sander Gerber",country:"USA",aum:7,strategy:"Multi-Strategy",ret:11.6,founded:2005,desc:"Multi-strategy fund with expertise in merger arbitrage, convertible bonds and equity special situations."},
+  {rank:56,name:"Magnetar Capital",manager:"Alec Litowitz",country:"USA",aum:15,strategy:"Multi-Strategy",ret:12.9,founded:2005,desc:"Multi-strategy fund with expertise in structured credit, merger arbitrage and energy special situations."},
+  {rank:57,name:"King Street Capital",manager:"Francis Biondi",country:"USA",aum:22,strategy:"Credit",ret:11.5,founded:1995,desc:"Credit-focused hedge fund investing across the capital structure in distressed and special situations globally."},
+  {rank:58,name:"Centerbridge Partners",manager:"Jeffrey Aronson",country:"USA",aum:32,strategy:"Credit",ret:12.1,founded:2005,desc:"Alternative investment firm with credit, private equity and real estate strategies focused on value creation."},
+  {rank:59,name:"Oaktree Capital Management",manager:"Howard Marks",country:"USA",aum:170,strategy:"Credit",ret:10.3,founded:1995,desc:"Global alternative investment manager specializing in credit strategies across distressed, high yield and real assets."},
+  {rank:60,name:"Cerberus Capital Management",manager:"Stephen Feinberg",country:"USA",aum:60,strategy:"Credit",ret:11.8,founded:1992,desc:"Alternative investment firm specializing in distressed investing, private equity and real estate globally."},
+  {rank:61,name:"Ares Management",manager:"Michael Arougheti",country:"USA",aum:418,strategy:"Credit",ret:10.1,founded:1997,desc:"Global alternative investment manager with credit, private equity and real assets strategies across market cycles."},
+  {rank:62,name:"Angelo Gordon",manager:"Josh Baumgarten",country:"USA",aum:73,strategy:"Credit",ret:9.8,founded:1988,desc:"Alternative investment manager specializing in credit and real estate across North America and Europe."},
+  {rank:63,name:"Sculptor Capital Management",manager:"Jimmy Levin",country:"USA",aum:34,strategy:"Multi-Strategy",ret:11.0,founded:1994,desc:"Formerly Och-Ziff. Runs multi-strategy across credit, equities and real estate globally."},
+  {rank:64,name:"Canyon Capital Advisors",manager:"Joshua Friedman",country:"USA",aum:24,strategy:"Credit",ret:10.6,founded:1990,desc:"Credit-oriented multi-strategy fund with a long track record in distressed debt and special situations."},
+  {rank:65,name:"Anchorage Capital Group",manager:"Kevin Ulrich",country:"USA",aum:8,strategy:"Credit",ret:10.7,founded:2003,desc:"Credit-focused hedge fund specializing in distressed debt and stressed credit situations globally."},
+  {rank:66,name:"Varde Partners",manager:"Ilfryn Carstairs",country:"USA",aum:15,strategy:"Credit",ret:11.7,founded:1993,desc:"Global alternative investment firm focused on credit and special situations across real estate and corporate finance."},
+  {rank:67,name:"Mudrick Capital Management",manager:"Jason Mudrick",country:"USA",aum:4,strategy:"Credit",ret:13.4,founded:2009,desc:"Distressed debt and event-driven credit specialist targeting dislocated and complex credit situations."},
+  {rank:68,name:"Grantham Mayo Van Otterloo",manager:"Jeremy Grantham",country:"USA",aum:61,strategy:"Value",ret:9.1,founded:1977,desc:"Asset manager known for long-term value investing and Jeremy Grantham's influential bubble-spotting research."},
+  {rank:69,name:"Gabelli Funds",manager:"Mario Gabelli",country:"USA",aum:28,strategy:"Value",ret:9.2,founded:1977,desc:"Value-oriented asset manager known for merger arbitrage and undervalued asset plays across market cycles."},
+  {rank:70,name:"ValueAct Capital",manager:"Mason Morfit",country:"USA",aum:16,strategy:"Activist",ret:13.7,founded:2000,desc:"Constructivist activist fund known for taking board seats and driving operational improvements at portfolio companies."},
+  {rank:71,name:"Starboard Value",manager:"Jeff Smith",country:"USA",aum:7,strategy:"Activist",ret:15.8,founded:2011,desc:"Activist hedge fund with strong track record of operational improvements at underperforming companies."},
+  {rank:72,name:"Corvex Management",manager:"Keith Meister",country:"USA",aum:6,strategy:"Activist",ret:14.3,founded:2011,desc:"Event-driven activist fund focused on unlocking value through constructive engagement with management teams."},
+  {rank:73,name:"Jana Partners",manager:"Barry Rosenstein",country:"USA",aum:3,strategy:"Activist",ret:12.2,founded:2001,desc:"Activist fund targeting companies with potential for operational improvements and strategic alternatives."},
+  {rank:74,name:"Sachem Head Capital",manager:"Scott Ferguson",country:"USA",aum:4,strategy:"Activist",ret:14.5,founded:2012,desc:"Activist hedge fund focused on complex corporate situations with operational and strategic improvement potential."},
+  {rank:75,name:"Glenview Capital",manager:"Larry Robbins",country:"USA",aum:8,strategy:"Long/Short Equity",ret:12.9,founded:2000,desc:"Healthcare and consumer-focused L/S equity fund combining fundamental research with activist investing."},
+  {rank:76,name:"Egerton Capital",manager:"John Armitage",country:"UK",aum:14,strategy:"Long/Short Equity",ret:12.4,founded:1994,desc:"Fundamental European and global L/S equity fund known for concentrated, high-conviction positions."},
+  {rank:77,name:"Lansdowne Developed Markets",manager:"Jonathon Regis",country:"UK",aum:8,strategy:"Long/Short Equity",ret:10.2,founded:2001,desc:"European long/short equity fund with a deep fundamental research process across developed markets."},
+  {rank:78,name:"LMR Partners",manager:"Ben Levine",country:"UK",aum:6,strategy:"Multi-Strategy",ret:11.8,founded:2009,desc:"Multi-strategy fund trading equities, fixed income, commodities and currencies with a quantitative overlay."},
+  {rank:79,name:"CQS",manager:"Michael Hintze",country:"UK",aum:14,strategy:"Multi-Strategy",ret:11.4,founded:1999,desc:"Multi-strategy credit and convertible bond specialist with strong performance through credit cycles."},
+  {rank:80,name:"Algebris Investments",manager:"Davide Serra",country:"UK",aum:10,strategy:"Credit",ret:12.6,founded:2006,desc:"Specialist in global financials equity and credit, running concentrated fundamental strategies."},
+  {rank:81,name:"Cheyne Capital",manager:"Jonathan Lourie",country:"UK",aum:12,strategy:"Multi-Strategy",ret:10.9,founded:2000,desc:"Alternative investment manager with expertise in credit, real estate debt and equity special situations."},
+  {rank:82,name:"Autonomy Capital",manager:"Robert Gibbins",country:"USA",aum:5,strategy:"Global Macro",ret:12.7,founded:2003,desc:"Global macro fund specializing in emerging market sovereign debt and currency trading."},
+  {rank:83,name:"Ionic Capital Management",manager:"Bart Baum",country:"USA",aum:3,strategy:"Quantitative",ret:12.3,founded:2006,desc:"Convertible bond and volatility arbitrage specialist using quantitative and fundamental methods."},
+  {rank:84,name:"Paloma Partners",manager:"Donald Sussman",country:"USA",aum:3,strategy:"Multi-Strategy",ret:10.8,founded:1981,desc:"Multi-strategy fund, one of the pioneers of the multi-manager model in the hedge fund industry."},
+  {rank:85,name:"Caspian Capital",manager:"David Rosenberg",country:"USA",aum:5,strategy:"Credit",ret:11.2,founded:2004,desc:"Credit-focused fund specializing in distressed debt, stressed situations and capital structure arbitrage."},
+  {rank:86,name:"Segantii Capital",manager:"Simon Sadler",country:"Hong Kong",aum:5,strategy:"Event Driven",ret:14.9,founded:2007,desc:"Asia-focused event driven fund specializing in equity special situations and convertible bond arbitrage."},
+  {rank:87,name:"Keystone Investment",manager:"Soo Chuen Tan",country:"Singapore",aum:4,strategy:"Long/Short Equity",ret:11.9,founded:2011,desc:"Singapore-based value investor with a concentrated portfolio of carefully selected global equities."},
+  {rank:88,name:"Toscafund Asset Management",manager:"Martin Hughes",country:"UK",aum:3,strategy:"Long/Short Equity",ret:10.5,founded:2000,desc:"UK-focused L/S equity fund with expertise in financials, special situations and corporate events."},
+  {rank:89,name:"Dunn Capital Management",manager:"William Dunn",country:"USA",aum:2,strategy:"CTA/Trend",ret:8.4,founded:1974,desc:"One of the oldest trend-following CTAs, using purely systematic methods to trade global futures markets."},
+  {rank:90,name:"Highfields Capital",manager:"Jonathon Jacobson",country:"USA",aum:3,strategy:"Long/Short Equity",ret:11.1,founded:1998,desc:"Concentrated fundamental L/S equity fund that returned outside capital to focus on the founding family's assets."},
+  {rank:91,name:"First Pacific Advisors",manager:"Steven Romick",country:"USA",aum:10,strategy:"Value",ret:8.8,founded:1954,desc:"Contrarian value-oriented investment manager with a flexible mandate across equities and fixed income."},
+  {rank:92,name:"Steadfast Capital",manager:"Robert Pitts",country:"USA",aum:7,strategy:"Long/Short Equity",ret:12.5,founded:2000,desc:"Fundamental global L/S equity fund with expertise across consumer, healthcare and technology sectors."},
+  {rank:93,name:"Bridgepoint Capital",manager:"William Jackson",country:"UK",aum:30,strategy:"Private Equity",ret:13.2,founded:1984,desc:"European private equity firm investing in mid-market businesses across multiple sectors and geographies."},
+  {rank:94,name:"Partners Group",manager:"David Layton",country:"Switzerland",aum:10,strategy:"Private Equity",ret:12.4,founded:1996,desc:"Swiss alternative asset manager with a broad private markets platform across equity, debt and real assets."},
+  {rank:95,name:"Greenwood Investors",manager:"Steven Wood",country:"USA",aum:1,strategy:"Value",ret:13.6,founded:2012,desc:"European and global value-oriented L/S equity fund with a deep fundamental research process."},
+  {rank:96,name:"Blackpine Fund Management",manager:"Andrew Wong",country:"Hong Kong",aum:2,strategy:"Long/Short Equity",ret:13.1,founded:2008,desc:"Asia-focused long/short equity fund with expertise in Chinese consumer and technology sectors."},
+  {rank:97,name:"Adelphi Capital",manager:"John Moody",country:"UK",aum:2,strategy:"Long/Short Equity",ret:11.3,founded:2005,desc:"European fundamental L/S equity fund with a focus on quality businesses at reasonable valuations."},
+  {rank:98,name:"Crispin Odey Asset Management",manager:"James Hanbury",country:"UK",aum:3,strategy:"Long/Short Equity",ret:9.1,founded:1991,desc:"European L/S equity fund with contrarian macro views, known for bold directional bets across asset classes."},
+  {rank:99,name:"Janus Henderson Investors",manager:"Ali Dibadj",country:"UK",aum:11,strategy:"Long/Short Equity",ret:9.1,founded:1969,desc:"Global asset manager with hedge fund strategies across equities and fixed income markets worldwide."},
+  {rank:100,name:"Pershing Square Tontine",manager:"Bill Ackman",country:"USA",aum:4,strategy:"Activist",ret:11.8,founded:2020,desc:"Special purpose vehicle and follow-on funds managed by Bill Ackman targeting transformative acquisitions."},
+];
+
+
+function HedgeFunds() {
+  const [search, setSearch] = React.useState("");
+  const [sortBy, setSortBy] = React.useState("rank");
+  const [sel, setSel] = React.useState(null);
+  const [filter, setFilter] = React.useState("All");
+  const C = { bg:"#0d0f14", surface:"#13161e", card:"#1a1e28", border:"#1e2335", text:"#e8ecf4", sub:"#7c87a0", green:"#10b981", red:"#ef4444", accent:"#6366f1" };
+  const sc = s => ({"Global Macro":"#f59e0b","Quantitative":"#3b82f6","Multi-Strategy":"#8b5cf6","Long/Short Equity":"#10b981","Activist":"#ef4444","Event Driven":"#f97316","Credit":"#06b6d4","Value":"#84cc16","CTA/Trend":"#ec4899","Fixed Income":"#14b8a6","Global Equity":"#22d3ee","Sovereign Wealth":"#a78bfa","Private Equity":"#fb923c","Real Estate":"#4ade80"}[s]||"#7c87a0");
+  const strategies = ["All",...Array.from(new Set(FUNDS100.map(f=>f.strategy))).sort()];
+  const filtered = FUNDS100.filter(f=>(filter==="All"||f.strategy===filter)&&(f.name+f.manager+f.country+f.strategy).toLowerCase().includes(search.toLowerCase())).sort((a,b)=>sortBy==="aum"?b.aum-a.aum:sortBy==="return"?b.ret-a.ret:sortBy==="founded"?a.founded-b.founded:a.rank-b.rank);
+  const totalAUM = FUNDS100.reduce((s,f)=>s+f.aum,0);
+  const avgRet = (FUNDS100.reduce((s,f)=>s+f.ret,0)/FUNDS100.length).toFixed(1);
+  return (
+    <div style={{padding:"0 0 40px"}}>
+      {sel&&<div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div onClick={e=>e.stopPropagation()} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:18,padding:30,width:520,maxWidth:"90vw",boxShadow:"0 25px 60px rgba(0,0,0,0.6)"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
+            <div><div style={{fontWeight:800,fontSize:20,color:C.text,marginBottom:4}}>{sel.name}</div><div style={{color:C.sub,fontSize:13}}>#{sel.rank} · Founded {sel.founded}</div></div>
+            <button onClick={()=>setSel(null)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.sub,cursor:"pointer",fontSize:18,padding:"2px 10px"}}>✕</button>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:20}}>
+            {[["AUM",`$${sel.aum}B`,C.text],["Avg Return",`+${sel.ret}%`,C.green],["Country",sel.country,C.text]].map(([l,v,col])=>(
+              <div key={l} style={{background:C.surface,borderRadius:10,padding:"12px 14px",border:`1px solid ${C.border}`}}>
+                <div style={{color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>{l}</div>
+                <div style={{fontWeight:700,fontSize:16,color:col}}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{marginBottom:14}}><div style={{color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:6}}>Manager</div><div style={{color:C.text,fontWeight:600,fontSize:15}}>{sel.manager}</div></div>
+          <div style={{marginBottom:14}}><div style={{color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:6}}>Strategy</div><span style={{fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:6,background:sc(sel.strategy)+"22",color:sc(sel.strategy)}}>{sel.strategy}</span></div>
+          <div><div style={{color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:6}}>About</div><div style={{color:C.text,fontSize:13,lineHeight:1.6}}>{sel.desc}</div></div>
+        </div>
+      </div>}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:20}}>
+        {[["Funds Tracked","100","Global rankings"],["Total AUM",`$${(totalAUM/1000).toFixed(1)}T`,"Combined assets"],["Avg Annual Return",`${avgRet}%`,"Across all funds"]].map(([l,v,s])=>(
+          <div key={l} style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 20px"}}>
+            <div style={{color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:6}}>{l}</div>
+            <div style={{fontWeight:800,fontSize:22,color:C.text}}>{v}</div>
+            <div style={{color:C.sub,fontSize:12,marginTop:2}}>{s}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:14,padding:20,marginBottom:16}}>
+        <div style={{display:"flex",gap:12,marginBottom:14,flexWrap:"wrap"}}>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search fund, manager, country or strategy…" style={{flex:1,minWidth:200,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13,outline:"none"}}/>
+          <select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:10,color:C.text,padding:"10px 12px",fontSize:13,cursor:"pointer"}}>
+            <option value="rank">Sort: Rank</option><option value="aum">Sort: AUM ↓</option><option value="return">Sort: Return ↓</option><option value="founded">Sort: Oldest first</option>
+          </select>
+        </div>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+          {strategies.map(s=><button key={s} onClick={()=>setFilter(s)} style={{padding:"4px 12px",borderRadius:20,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,background:filter===s?(s==="All"?C.accent:sc(s)):C.card,color:filter===s?"#fff":C.sub}}>{s}</button>)}
+        </div>
+      </div>
+      <div style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:14,overflow:"hidden"}}>
+        <div style={{display:"grid",gridTemplateColumns:"50px 2fr 110px 160px 90px 110px 100px",padding:"10px 20px",color:C.sub,fontSize:11,textTransform:"uppercase",letterSpacing:"0.06em",borderBottom:`1px solid ${C.border}`}}>
+          {["#","Fund / Manager","Country","Strategy","AUM","Return","Founded"].map((h,i)=><span key={i} style={{textAlign:i>1?"right":"left"}}>{h}</span>)}
+        </div>
+        {filtered.length===0&&<div style={{padding:"40px 20px",textAlign:"center",color:C.sub}}>No funds match your search.</div>}
+        {filtered.map(fund=>(
+          <div key={fund.rank} onClick={()=>setSel(fund)} style={{display:"grid",gridTemplateColumns:"50px 2fr 110px 160px 90px 110px 100px",padding:"13px 20px",borderBottom:`1px solid ${C.border}`,cursor:"pointer",alignItems:"center",transition:"background 0.1s"}} onMouseEnter={e=>e.currentTarget.style.background=C.card} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+            <div style={{color:C.sub,fontWeight:700,fontSize:12}}>#{fund.rank}</div>
+            <div><div style={{fontWeight:700,fontSize:13,color:C.text}}>{fund.name}</div><div style={{color:C.sub,fontSize:11,marginTop:2}}>{fund.manager}</div></div>
+            <div style={{textAlign:"right",color:C.text,fontSize:12}}>{fund.country}</div>
+            <div style={{textAlign:"right"}}><span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:5,background:sc(fund.strategy)+"22",color:sc(fund.strategy)}}>{fund.strategy}</span></div>
+            <div style={{textAlign:"right",fontWeight:700,color:C.text,fontSize:13}}>${fund.aum}B</div>
+            <div style={{textAlign:"right",fontWeight:700,color:C.green,fontSize:13}}>+{fund.ret}%</div>
+            <div style={{textAlign:"right",color:C.sub,fontSize:12}}>{fund.founded}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{color:C.sub,fontSize:11,textAlign:"center",marginTop:12}}>Showing {filtered.length} of 100 funds · Click any row for full details</div>
+    </div>
+  );
+}
+
 export default function App() {
   const [ready,     setReady]     = useState(FINNHUB_KEY !== "YOUR_FINNHUB_KEY");
   const [noLive,    setNoLive]    = useState(false);
