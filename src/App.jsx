@@ -62,7 +62,8 @@ function StatBox({ label, value, sub, up }) {
 
 // ── ADD STOCK MODAL ───────────────────────────────────────────────────────────
 function AddStockModal({ onAdd, onClose }) {
-  const [mode, setMode]         = useState("search"); // "search" | "manual"
+  const [mode, setMode]         = useState("search");
+  const [market, setMarket]     = useState("US"); // "search" | "manual"
   const [query, setQuery]       = useState("");
   const [results, setResults]   = useState([]);
   const [selected, setSelected] = useState(null);
@@ -85,7 +86,7 @@ function AddStockModal({ onAdd, onClose }) {
       try {
         const d = await searchFH(query.trim());
         const filtered = (d.result || [])
-          .filter(r => r.type === "Common Stock" && r.symbol && !r.symbol.includes("."))
+          .filter(r => market === "ASX" ? r.symbol && r.symbol.endsWith(".AX") : r.type === "Common Stock" && r.symbol && !r.symbol.includes("."))
           .slice(0, 8);
         setResults(filtered);
         if (filtered.length === 0) setError("No results — try the ticker directly (e.g. AAPL) or use Manual Entry.");
@@ -95,7 +96,7 @@ function AddStockModal({ onAdd, onClose }) {
       }
       setSearching(false);
     }, 450);
-  }, [query, selected]);
+  }, [query, selected, market]);
 
   const pick = r => { setSelected(r); setQuery(r.symbol + " — " + r.description); setResults([]); setError(""); };
   const clear = () => { setSelected(null); setQuery(""); setResults([]); setError(""); };
@@ -142,7 +143,7 @@ function AddStockModal({ onAdd, onClose }) {
         {mode === "search" && (
           <>
             <div style={{ marginBottom:14 }}>
-              <div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>Search by ticker or company name</div>
+              <div style={{ display:"flex", gap:0, marginBottom:10, background:C.bg, borderRadius:8, padding:3 }}>{[["US","🇺🇸 US"],["ASX","🇦🇺 ASX"]].map(([m,label]) => (<button key={m} onClick={()=>{setMarket(m);setQuery("");setSelected(null);setResults([]);}} style={{ flex:1, padding:"7px 0", borderRadius:6, border:"none", background:market===m?C.surface:"none", color:market===m?C.text:C.sub, fontWeight:market===m?700:400, cursor:"pointer", fontSize:13 }}>{label}</button>))}</div><div style={{ color:C.sub, fontSize:12, marginBottom:6 }}>{market==="ASX"?"Search ASX ticker (e.g. CBA, BHP)":"Search by ticker or company name"}</div>
               <div style={{ position:"relative" }}>
                 <input value={query} onChange={e => { setQuery(e.target.value); if (selected) clear(); }}
                   style={{ ...inp, paddingRight:36 }} placeholder="e.g. Apple, TSLA, Amazon…" autoFocus />
