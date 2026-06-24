@@ -482,6 +482,7 @@ export default function App() {
   const [quotes,    setQuotes]    = useState({});
   const [detail,    setDetail]    = useState(null);
   const [showAdd,   setShowAdd]   = useState(false);
+  const [editStock, setEditStock] = useState(null);
   const [tab,       setTab]       = useState("portfolio");
   const [refreshing,setRefreshing]= useState(false);
 
@@ -571,9 +572,10 @@ export default function App() {
                       <div style={{ color:gain>=0?C.green:C.red, fontWeight:600 }}>{fmt$(gain)}</div>
                       <div style={{ color:gain>=0?C.green:C.red, fontSize:11 }}>{fmtPct(gainP)}</div>
                     </div>
-                    <button onClick={e=>{e.stopPropagation();setPortfolio(p=>p.filter(x=>x.id!==s.id));}} style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:15, padding:"4px 8px", borderRadius:6 }}
-                      onMouseEnter={e=>e.currentTarget.style.color=C.red}
-                      onMouseLeave={e=>e.currentTarget.style.color=C.muted}>✕</button>
+                    <div style={{ display:"flex", gap:4 }}>
+                      <button onClick={e=>{e.stopPropagation();setEditStock(s);}} style={{ background:"none", border:"1px solid #1e2335", borderRadius:6, color:"#7c87a0", cursor:"pointer", fontSize:12, padding:"4px 8px" }}>✎</button>
+                      <button onClick={e=>{e.stopPropagation();setPortfolio(p=>p.filter(x=>x.id!==s.id));}} style={{ background:"none", border:"1px solid #1e2335", borderRadius:6, color:"#7c87a0", cursor:"pointer", fontSize:12, padding:"4px 8px" }}>✕</button>
+                    </div>
                   </div>
                 );
               })
