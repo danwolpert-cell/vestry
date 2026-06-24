@@ -1,3 +1,4 @@
+import Watchlist from './Watchlist.jsx';
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── API KEY STATE (mutable so runtime entry works) ────────────────────────────
