@@ -1,12 +1,14 @@
 export default async function handler(req, res) {
   const { ticker } = req.query;
   try {
-    const r = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1d`, {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
+    const r = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=demo`);
     const d = await r.json();
-    const q = d?.chart?.result?.[0]?.meta;
-    res.json({ c: q?.regularMarketPrice, pc: q?.previousClose || q?.chartPreviousClose });
+    const q = d?.['Global Quote'];
+    if (q?.['05. price']) {
+      res.json({ c: parseFloat(q['05. price']), pc: parseFloat(q['08. previous close']) });
+    } else {
+      res.status(404).json({ error: 'No data', raw: d });
+    }
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
