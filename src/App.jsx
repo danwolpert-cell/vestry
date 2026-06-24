@@ -735,7 +735,7 @@ export default function App() {
       <div style={{ borderBottom:`1px solid ${C.border}`, padding:"0 28px", display:"flex", alignItems:"center", justifyContent:"space-between", height:56 }}>
         <div style={{ display:"flex", alignItems:"center", gap:28 }}>
           <div style={{ fontWeight:900, fontSize:18, letterSpacing:"-0.5px" }}><span style={{ color:C.accent }}>V</span>estry</div>
-          {["portfolio","advisor"].map(t => (
+          {["portfolio","hedgefunds","advisor"].map(t => (
             <button key={t} onClick={()=>setTab(t)} style={{ background:"none", border:"none", color:tab===t?C.text:C.sub, fontWeight:tab===t?700:400, fontSize:14, cursor:"pointer", padding:"0 4px", textTransform:"capitalize" }}>{t==="advisor"?"AI Advisor":t==="hedgefunds"?"Hedge Funds":"Portfolio"}</button>
           ))}
         </div>
