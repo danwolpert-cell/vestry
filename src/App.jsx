@@ -615,10 +615,10 @@ const FUNDS100 = [
 
 
 function HedgeFunds() {
-  const [search, setSearch] = React.useState("");
-  const [sortBy, setSortBy] = React.useState("rank");
-  const [sel, setSel] = React.useState(null);
-  const [filter, setFilter] = React.useState("All");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("rank");
+  const [sel, setSel] = useState(null);
+  const [filter, setFilter] = useState("All");
   const C = { bg:"#0d0f14", surface:"#13161e", card:"#1a1e28", border:"#1e2335", text:"#e8ecf4", sub:"#7c87a0", green:"#10b981", red:"#ef4444", accent:"#6366f1" };
   const sc = s => ({"Global Macro":"#f59e0b","Quantitative":"#3b82f6","Multi-Strategy":"#8b5cf6","Long/Short Equity":"#10b981","Activist":"#ef4444","Event Driven":"#f97316","Credit":"#06b6d4","Value":"#84cc16","CTA/Trend":"#ec4899","Fixed Income":"#14b8a6","Global Equity":"#22d3ee","Sovereign Wealth":"#a78bfa","Private Equity":"#fb923c","Real Estate":"#4ade80"}[s]||"#7c87a0");
   const strategies = ["All",...Array.from(new Set(FUNDS100.map(f=>f.strategy))).sort()];
