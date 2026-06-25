@@ -371,7 +371,7 @@ function AIAdvisor({ portfolio, quotes }) {
     const cost  = portfolio.reduce((a,s) => a + s.shares*s.avgCost, 0);
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/advisor", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({
