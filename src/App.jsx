@@ -1,4 +1,5 @@
 import Analytics from './Analytics.jsx';
+import Crypto from './Crypto.jsx';
 import Watchlist from './Watchlist.jsx';
 import { useState, useEffect, useRef, useCallback } from "react";
 
@@ -743,8 +744,8 @@ export default function App() {
       <div style={{ borderBottom:`1px solid ${C.border}`, padding:"0 28px", display:"flex", alignItems:"center", justifyContent:"space-between", height:56 }}>
         <div style={{ display:"flex", alignItems:"center", gap:28 }}>
           <div style={{ fontWeight:900, fontSize:18, letterSpacing:"-0.5px" }}><span style={{ color:C.accent }}>V</span>estry</div>
-          {["portfolio","hedgefunds","watchlist","advisor"].map(t => (
-            <button key={t} onClick={()=>setTab(t)} style={{ background:"none", border:"none", color:tab===t?C.text:C.sub, fontWeight:tab===t?700:400, fontSize:14, cursor:"pointer", padding:"0 4px", textTransform:"capitalize" }}>{t==="advisor"?"AI Advisor":t==="hedgefunds"?"Hedge Funds":t==="watchlist"?"Watchlist":"Portfolio"}</button>
+          {["portfolio","hedgefunds","watchlist","crypto","advisor"].map(t => (
+            <button key={t} onClick={()=>setTab(t)} style={{ background:"none", border:"none", color:tab===t?C.text:C.sub, fontWeight:tab===t?700:400, fontSize:14, cursor:"pointer", padding:"0 4px", textTransform:"capitalize" }}>{t==="advisor"?"AI Advisor":t==="hedgefunds"?"Hedge Funds":t==="watchlist"?"Watchlist":t==="crypto"?"Crypto":"Portfolio"}</button>
           ))}
         </div>
         <div style={{ display:"flex", gap:10 }}>
@@ -830,6 +831,8 @@ export default function App() {
         {tab === "hedgefunds" && <HedgeFunds />}
 
         {tab === "watchlist" && <Watchlist />}
+
+        {tab === "crypto" && <Crypto />}
         {tab === "advisor" && (
           <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, height:640, display:"flex", flexDirection:"column", overflow:"hidden", boxShadow:`0 0 60px ${C.accentDim}` }}>
             <div style={{ padding:"16px 20px", borderBottom:`1px solid ${C.border}`, display:"flex", alignItems:"center", gap:8 }}>
